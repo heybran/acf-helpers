@@ -21,8 +21,30 @@
 
 namespace ACFHelpers;
 
+use ACFHelpers\Fields\Text;
+
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
 
-require_once dirname(__FILE__) . '/includes/class-text-field.php';
+require_once dirname(__FILE__) . '/includes/class-acf-group.php';
+require_once dirname(__FILE__) . '/includes/class-field-text.php';
+
+ACFGroup::create('test_movie_group')
+  ->title('Movie Fields')
+  ->fields([
+    Text::create('job_title')
+    ->label('Job Title')
+    ->placeholder('Job title')
+    ->save(),
+  ])
+  ->location([
+    [
+      [
+        'param' => 'post_type',
+				'operator' => '==',
+				'value' => 'movie',
+      ]
+    ]
+  ])
+  ->save();
