@@ -21,30 +21,65 @@
 
 namespace ACFHelpers;
 
+use ACFHelpers\Fields\DatePicker;
+use ACFHelpers\Fields\RichText;
+use ACFHelpers\Fields\Taxonomy;
 use ACFHelpers\Fields\Text;
+use ACFHelpers\Fields\URL;
 
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
 
 require_once dirname(__FILE__) . '/includes/class-acf-group.php';
+require_once dirname(__FILE__) . '/includes/class-rule.php';
+require_once dirname(__FILE__) . '/includes/class-field.php';
 require_once dirname(__FILE__) . '/includes/class-field-text.php';
+require_once dirname(__FILE__) . '/includes/class-field-url.php';
+require_once dirname(__FILE__) . '/includes/class-field-date-picker.php';
+require_once dirname(__FILE__) . '/includes/class-field-rich-text.php';
+require_once dirname(__FILE__) . '/includes/class-field-taxonomy.php';
 
-ACFGroup::create('test_movie_group')
-  ->title('Movie Fields')
+ACFGroup::create('job_group')
+  ->title('Custom Fields')
   ->fields([
-    Text::create('job_title')
-    ->label('Job Title')
-    ->placeholder('Job title')
-    ->save(),
+    Text::create('source')
+      ->label('Source')
+      ->wrapperWidth(50)
+      ->save(),
+    URL::create('website')
+      ->label('Website')
+      ->wrapperWidth(50)
+      ->save(),
+    Text::create('status')
+      ->label('Status')
+      ->wrapperWidth(50)
+      ->save(),
+    Text::create('apply_channel')
+      ->label('Apply Channel')
+      ->wrapperWidth(50)
+      ->save(),
+    DatePicker::create('apply_date')
+      ->label('Apply Date')
+      ->wrapperWidth(50)
+      ->save(),
+    Taxonomy::create('type')
+      ->label('Type')
+      ->save(),
+    RichText::create('notes')
+      ->label('Notes')
+      ->save(),
   ])
   ->location([
     [
-      [
-        'param' => 'post_type',
-				'operator' => '==',
-				'value' => 'movie',
-      ]
-    ]
+      Rule::create(Rule::POST_TYPE)->is('job')->save(),
+      // Rule::create(Rule::POST_TEMPLATE)->isNot('default')->save(),
+      // Rule::create(Rule::POST_CATEGORY)->is('book')->save(),
+      // Rule::create(Rule::POST_CATEGORY)->isNot('book')->save(),
+    ],
+    // [
+    //   Rule::create(Rule::POST_CATEGORY)->is('book')->save(),
+    //   Rule::create(Rule::BLOCK)->is('faq')->save(),
+    // ]
   ])
   ->save();
